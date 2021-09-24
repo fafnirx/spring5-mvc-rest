@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -73,5 +74,38 @@ class CustomerServiceImplTest {
                 () -> assertEquals("Harry", customerDTO.getFirstName()),
                 () -> assertEquals("Smith", customerDTO.getLastName())
         );
+    }
+
+    @Test
+    @DisplayName("Create a new customer")
+    void createNewCustomer() {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName("Hans");
+        customerDTO.setLastName("Smith");
+
+        Customer savedCustomer = customerMapper.customerDTOToCustomer(customerDTO);
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
+
+        CustomerDTO newCustomer = service.createNewCustomer(customerDTO);
+
+        assertEquals(newCustomer.getFirstName(), customerDTO.getFirstName() );
+    }
+
+    @Test
+    @DisplayName("Update customer")
+    void updateCustomer() {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName("Hans");
+        customerDTO.setLastName("Smith");
+
+        Customer savedCustomer = customerMapper.customerDTOToCustomer(customerDTO);
+        savedCustomer.setId(1L);
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
+
+        CustomerDTO savedDTO = service.createOrUpdate(1L, customerDTO);
+
+        assertEquals(customerDTO.getFirstName(), savedDTO.getFirstName() );
     }
 }

@@ -44,4 +44,17 @@ public class CustomerController {
         CustomerDTO updatedCustomer = customerService.createOrUpdate(id, customerDTO);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CustomerDTO>patchCustomer( @PathVariable Long id,
+                                                     @RequestBody CustomerDTO customerDTO) {
+        CustomerDTO patchCustomer = customerService.patchCustomer(id, customerDTO);
+        return new ResponseEntity<>(patchCustomer, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        customerService.deleteCustomer(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }

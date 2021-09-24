@@ -14,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceImplTest {
@@ -89,7 +89,7 @@ class CustomerServiceImplTest {
 
         CustomerDTO newCustomer = service.createNewCustomer(customerDTO);
 
-        assertEquals(newCustomer.getFirstName(), customerDTO.getFirstName() );
+        assertEquals(newCustomer.getFirstName(), customerDTO.getFirstName());
     }
 
     @Test
@@ -106,6 +106,14 @@ class CustomerServiceImplTest {
 
         CustomerDTO savedDTO = service.createOrUpdate(1L, customerDTO);
 
-        assertEquals(customerDTO.getFirstName(), savedDTO.getFirstName() );
+        assertEquals(customerDTO.getFirstName(), savedDTO.getFirstName());
+    }
+
+    @Test
+    @DisplayName("Deleting a customer")
+    void deleteCustomer() {
+        Long id = 1L;
+        customerRepository.deleteById(id);
+        verify(customerRepository, times(1)).deleteById(anyLong());
     }
 }

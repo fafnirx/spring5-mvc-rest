@@ -36,6 +36,7 @@ class CustomerControllerTest {
     CustomerController controller;
 
     MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -50,7 +51,8 @@ class CustomerControllerTest {
         when(customerService.getAllCustomers()).thenReturn(customers);
 
         mockMvc.perform(get(CustomerController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customers", hasSize(3)));
     }
@@ -65,7 +67,8 @@ class CustomerControllerTest {
         when(customerService.getCustomerById(anyLong())).thenReturn(customerDTO);
 
         mockMvc.perform(get(CustomerController.BASE_URL + "/2")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo("Harry")))
                 .andExpect(jsonPath("$.lastName", equalTo("Potter")));
@@ -93,8 +96,9 @@ class CustomerControllerTest {
         when(customerService.createNewCustomer(any())).thenReturn(returnedCustomer);
 
         mockMvc.perform(post(CustomerController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(customer)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(customer)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(2)))
                 .andExpect(jsonPath("$.firstName", equalTo("Harry")))
@@ -115,6 +119,7 @@ class CustomerControllerTest {
         when(customerService.createOrUpdate(anyLong(), any())).thenReturn(returnedCustomer);
 
         mockMvc.perform(put(CustomerController.BASE_URL + "/2")
+                        .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(customer)))
                 .andExpect(status().isOk())
@@ -128,7 +133,7 @@ class CustomerControllerTest {
     @DisplayName("Deleting a customer")
     void deleteCustomer() throws Exception {
         mockMvc.perform(delete(CustomerController.BASE_URL + "/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(customerService, times(1)).deleteCustomer(anyLong());
     }

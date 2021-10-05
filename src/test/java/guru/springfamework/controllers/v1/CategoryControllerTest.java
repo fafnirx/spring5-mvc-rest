@@ -40,7 +40,7 @@ class CategoryControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice( new RestResponseEntityExceptionHandler())
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
                 .build();
     }
 
@@ -60,7 +60,8 @@ class CategoryControllerTest {
         List<CategoryDTO> categoryDTOList = createCategoryDTOList();
         when(service.getAllCategories()).thenReturn(categoryDTOList);
         mockMvc.perform(get(CategoryController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categories", hasSize(2)));
     }
@@ -71,7 +72,8 @@ class CategoryControllerTest {
         when(service.getCategoryByName(anyString())).thenReturn(categoryDTOList.get(0));
 
         mockMvc.perform(get(CategoryController.BASE_URL + "/Alice")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("Alice")));
 
@@ -81,8 +83,9 @@ class CategoryControllerTest {
     void getGetByNameNotFound() throws Exception {
         when(service.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(get(CategoryController.BASE_URL + "/NON_EXISTING")
+                        .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
 
     }
 }
